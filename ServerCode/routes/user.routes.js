@@ -8,5 +8,6 @@ router
   .get(userCtrl.read)
   .put(userCtrl.update)
   .delete(userCtrl.remove);
+
 router.param("userId", userCtrl.userById);
 module.exports = router;

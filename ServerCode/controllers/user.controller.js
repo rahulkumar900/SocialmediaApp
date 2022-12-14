@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-var _ = require("lodash");
+var { extend } = require("lodash");
 
 // create controllers for the Routes
 //    - create
@@ -56,7 +56,7 @@ const read = async (req, res) => {
 const update = async (req, res) => {
   try {
     let user = req.profile;
-    user = _.assignIn(user, req.body);
+    user = extend(user, req.body);
     user.updated = Date.now();
     await user.save();
     user.hashed_password = undefined;

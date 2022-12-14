@@ -1,10 +1,9 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-const expressJwt = require("expressJwt");
+var { expressjwt } = require("express-jwt");
 const { result } = require("lodash");
 const { defaultConfiguration } = require("../main/app");
-const jwtSecret =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.GHqKl - DlA9t2sN6rA03iOrCLmKUjB6mBtxy2am3qIBA";
+const config = require("../config");
 // Signin Controller
 
 const signin = async (req, res) => {
@@ -14,7 +13,7 @@ const signin = async (req, res) => {
     if (!user.authenticate(req.body.password)) {
       return res.status(401).send({ error: "Email and password don't match" });
     }
-    const token = jwt.sign({ _id: user._id }, jwtSecret);
+    const token = jwt.sign({ _id: user._id }, config.jwtSecret);
     res.cookie("t", token, { expire: new Date() + 9999 });
     return res.json({
       token,
@@ -38,12 +37,21 @@ const signout = (req, res) => {
 
 // check if require sign in
 
-const requireSignin = expressJwt({
+const requireSignin = expressjwt({
   secret: config.jwtSecret,
   userProperty: "auth",
+  algorithms: ["HS256"],
 });
 
 // check user is authorized to perform update detete and update action
-const hasAuthorization = (req, res) => {};
+const hasAuthorization = (req, res, next) => {
+  const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
+  if (!authorized) {
+    return res.status(403).json({
+      error: "User not authorized",
+    });
+  }
+  next();
+};
 
 module.exports = { signin, signout, requireSignin, hasAuthorization };
