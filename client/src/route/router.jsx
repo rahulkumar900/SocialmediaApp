@@ -3,9 +3,10 @@ import Root from "../components/root";
 import Error from "../pages/error-page";
 import Users, { loader as UserLoader } from "../pages/all-users";
 import Signup from "../pages/signup";
-import Signin from "../pages/signin";
 import Profile, { loader as ProfileLoader } from "../pages/profile";
 import ProfileUpdate from "../pages/profile-update";
+import SigninPage from "../pages/signin";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -27,18 +28,18 @@ const router = createBrowserRouter([
         element: <ProfileUpdate />,
         loader: ProfileLoader,
       },
-      {
-        path: "signup",
-        element: <Signup />,
-        errorElement: <Error />,
-      },
-      {
-        path: "signin",
-        element: <Signin />,
-        errorElement: <Error />,
-        loader: UserLoader,
-      },
     ],
+  },
+  {
+    path: "signup",
+    element: <Signup />,
+    errorElement: <Error />,
+  },
+  {
+    path: "signin",
+    element: <SigninPage />,
+    errorElement: <Error />,
+    loader: UserLoader,
   },
 ]);
 

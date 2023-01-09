@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import {
@@ -16,6 +16,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { AuthContext } from "../auth-context";
 
 const solutions = [
   {
@@ -99,6 +100,8 @@ function classNames(...classes) {
 }
 
 export default function Nav() {
+  const { isAuthenticated, user, dispatch } = useContext(AuthContext);
+
   return (
     <>
       <Popover className="bg-white">
@@ -216,18 +219,39 @@ export default function Nav() {
               </Link>
             </Popover.Group>
             <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-              <Link
-                to="signin"
-                className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-              >
-                Sign in
-              </Link>
-              <Link
-                to="signup"
-                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-              >
-                Sign up
-              </Link>
+              {isAuthenticated && user ? (
+                <>
+                  {" "}
+                  <div
+                    to="signin"
+                    className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+                  >
+                    {user && user.name}
+                  </div>
+                  <button
+                    onClick={() => dispatch({ type: "LOGOUT" })}
+                    className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                  >
+                    SignOut
+                  </button>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Link
+                    to="signin"
+                    className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    to="signup"
+                    className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -3,8 +3,9 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./route/router";
+import { AuthContextProvider } from "./auth-context";
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <AuthContextProvider>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </AuthContextProvider>
 );
